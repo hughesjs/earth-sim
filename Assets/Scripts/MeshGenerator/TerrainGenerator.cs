@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 // Ref: http://www.martin-ritter.com/2019/02/unity-simple-mesh-generation/
@@ -8,14 +9,17 @@ namespace MeshGenerator
     [RequireComponent(typeof(MeshRenderer))]
     public class TerrainGenerator : MonoBehaviour
     {
-        public int xSize;
-        public int zSize;
-
-        public float stepTimeInSeconds;
-
         public MeshRenderer meshRenderer;
         public MeshFilter meshFilter;
-
+        
+        public int xSize;
+        public int zSize;
+        public int ySize;
+        
+        private int xVertices => xSize + 1;
+        private int yVertices => ySize + 1;
+        private int zVertices => zSize + 1;
+        
         private Vector3[] _vertices;
         private int[] _tris;
         private Mesh _mesh;
@@ -53,20 +57,18 @@ namespace MeshGenerator
             _mesh.RecalculateNormals();
         }
 
-        private int xVertices => xSize + 1;
-        private int yVertices => 0;
-        private int zVertices => zSize + 1;
+
         private void GenerateInitialVertices()
         {
             Debug.Log("Creating Vertices");
             int totalVertices = xVertices * zVertices;
             _vertices = new Vector3[totalVertices];
-    
+            int y = 0;
             for (int z = 0, i = 0; z < zVertices; z++) //Note i = 0 declared here
             {
                 for (int x = 0; x < zVertices; x++, i++) // i incremented here
                 {
-                    _vertices[i] = new(x, 0, z);
+                    _vertices[i] = new(x, (float)Math.Sin(y++), z);
 
                     Debug.Log($"Produced new vertex ({x};0;{z})");
                 }
