@@ -40,7 +40,9 @@ namespace TerrainGen
                                               ((ratio.x - .5f) * 2 * _axisA) +
                                               ((ratio.y - .5f) * 2 * _axisB);
 
-                    vertices[i] = pointOnUnitCube;
+                    Vector3 pointOnUnitSphere = pointOnUnitCube.normalized;
+                    
+                    vertices[i] = pointOnUnitSphere;
 
                     if (x < _resolution - 1 && y < _resolution - 1)
                     {
