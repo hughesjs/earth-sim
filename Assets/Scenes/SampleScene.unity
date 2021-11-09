@@ -263,13 +263,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee57aff7b4e7c658d851cc510e9e220d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xSize: 10
-  zSize: 10
-  stepTimeInSeconds: 0.05
-  stepwiseGeneration: 1
-  rotate: 0
   meshRenderer: {fileID: 750107830}
   meshFilter: {fileID: 750107831}
+  xSize: 10
+  zSize: 10
+  ySize: 0
 --- !u!23 &750107830
 MeshRenderer:
   m_ObjectHideFlags: 0
