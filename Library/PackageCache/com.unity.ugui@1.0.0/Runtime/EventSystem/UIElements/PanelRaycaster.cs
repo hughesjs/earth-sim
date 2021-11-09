@@ -5,8 +5,6 @@ using UnityEngine.EventSystems;
 
 namespace UnityEngine.UIElements
 {
-    // This code is disabled unless the UI Toolkit package or the com.unity.modules.uielements module are present.
-    // The UIElements module is always present in the Editor but it can be stripped from a project build if unused.
 #if PACKAGE_UITOOLKIT
     /// <summary>
     /// A derived BaseRaycaster to raycast against UI Toolkit panel instances at runtime.
@@ -85,11 +83,6 @@ namespace UnityEngine.UIElements
                 // The multiple display system is not supported on all platforms, when it is not supported the returned position
                 // will be all zeros so when the returned index is 0 we will default to the event data to be safe.
                 eventPosition = eventData.position;
-#if UNITY_EDITOR
-                if (Display.activeEditorGameViewTarget != displayIndex)
-                    return;
-                eventPosition.z = Display.activeEditorGameViewTarget;
-#endif
 
                 // We don't really know in which display the event occurred. We will process the event assuming it occurred in our display.
             }

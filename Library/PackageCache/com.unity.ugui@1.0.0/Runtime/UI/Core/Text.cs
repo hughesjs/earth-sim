@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace UnityEngine.UI
 {
     [RequireComponent(typeof(CanvasRenderer))]
-    [AddComponentMenu("UI/Legacy/Text", 100)]
+    [AddComponentMenu("UI/Text", 10)]
     /// <summary>
     /// The default Graphic to draw font data to screen.
     /// </summary>
@@ -216,12 +216,6 @@ namespace UnityEngine.UI
                 {
                     m_Text = value;
                     SetVerticesDirty();
-                    SetLayoutDirty();
-                }
-                else
-                {
-                    // To fix case 1320719; when the same character is entered multiple times, we still need to recalculate the layout
-                    // After maybe the area will be bigger and will contain more characters
                     SetLayoutDirty();
                 }
             }

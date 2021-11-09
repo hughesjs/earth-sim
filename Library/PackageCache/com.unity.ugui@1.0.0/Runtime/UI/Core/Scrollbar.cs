@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 namespace UnityEngine.UI
 {
-    [AddComponentMenu("UI/Scrollbar", 36)]
+    [AddComponentMenu("UI/Scrollbar", 34)]
     [ExecuteAlways]
     [RequireComponent(typeof(RectTransform))]
     /// <summary>

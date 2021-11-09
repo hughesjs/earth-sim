@@ -51,9 +51,6 @@ ScriptedImporterEditor
 PrefabStage
 SceneManagement
 PrefabStageUtility
-EditorToolbarDropdownToggle
-UnityEditor
-Overlays
 NavMeshPathStatus
 UnityEngine
 NavMeshPath
@@ -142,9 +139,6 @@ TerrainUtility
 PaintContext
 TerrainPaintUtility
 BrushTransform
-EnumField
+ProgressBar
 UnityEditor
 UIElements
-PopupField<>
-BasePopupField<,>
-ProgressBar

@@ -13,7 +13,7 @@ namespace UnityEngine.UI
     /// Turn a simple label into a interactable input field.
     /// </summary>
 
-    [AddComponentMenu("UI/Legacy/Input Field", 103)]
+    [AddComponentMenu("UI/Input Field", 31)]
     public class InputField
         : Selectable,
         IUpdateSelectedHandler,
@@ -1144,7 +1144,7 @@ namespace UnityEngine.UI
                 m_TextComponent.UnregisterDirtyVerticesCallback(UpdateLabel);
                 m_TextComponent.UnregisterDirtyMaterialCallback(UpdateCaretMaterial);
             }
-            CanvasUpdateRegistry.DisableCanvasElementForRebuild(this);
+            CanvasUpdateRegistry.UnRegisterCanvasElementForRebuild(this);
 
             // Clear needs to be called otherwise sync never happens as the object is disabled.
             if (m_CachedInputRenderer != null)
@@ -1155,12 +1155,6 @@ namespace UnityEngine.UI
             m_Mesh = null;
 
             base.OnDisable();
-        }
-
-        protected override void OnDestroy()
-        {
-            CanvasUpdateRegistry.UnRegisterCanvasElementForRebuild(this);
-            base.OnDestroy();
         }
 
         IEnumerator CaretBlink()
@@ -1337,7 +1331,6 @@ namespace UnityEngine.UI
             switch (platform)
             {
                 case RuntimePlatform.Android:
-                case RuntimePlatform.WebGLPlayer:
                     return !TouchScreenKeyboard.isInPlaceEditingAllowed;
                 default:
                     return TouchScreenKeyboard.isSupported;
