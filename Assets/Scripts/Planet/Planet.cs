@@ -1,3 +1,4 @@
+using System.Linq;
 using TerrainGen;
 using UnityEngine;
 
@@ -12,38 +13,55 @@ namespace Planet
         
         [SerializeField, HideInInspector] 
         private MeshFilter[] filters;
+
         private TerrainFace[] _terrainFaces;
 
         private readonly Vector3[] _faceDirections = { Vector3.up, Vector3.down, Vector3.left, Vector3.right, Vector3.forward, Vector3.back };
 
         private void OnValidate()
         {
-            Initialize();
+            if (filters is null || filters.Any(f => f == null) || _terrainFaces is null || _terrainFaces.Any(t => t is null) )
+            {
+                Initialize();
+            }
+            UpdateMesh();
             GenerateMesh();
+        }
+
+        private void UpdateMesh()
+        {
+            Debug.Log("Updating planet mesh");
+            for (int i = 0; i < Faces; i++)
+            {
+                _terrainFaces[i] = new(filters[i].sharedMesh, resolution, _faceDirections[i]);
+            }
         }
         
         private void Initialize()
         {
-            _terrainFaces = new TerrainFace[Faces]; // Regen on update
+            Debug.Log("Initialising planet mesh");
+            _terrainFaces = new TerrainFace[Faces];
+            filters = new MeshFilter[Faces];
 
-            if (filters is null || filters.Length <= 0)
-            {
-                filters = new MeshFilter[Faces];
-            }
-            
             for (int i = 0; i < Faces; i++)
             {
-                if (filters[i] is null) // Don't regen on update
+                string gObjName = $"Terrain Face {i}";
+                GameObject terrainFaceObj = GameObject.Find(gObjName);
+                if (terrainFaceObj == null) // Overloaded equality wanted
                 {
-                    GameObject mesh = new("mesh");
-                    mesh.transform.parent = transform;
-                    mesh.AddComponent<MeshRenderer>().sharedMaterial = new(Shader.Find("Standard"));
-                    MeshFilter meshFilter = mesh.AddComponent<MeshFilter>();
-                    meshFilter.sharedMesh = new();
-                    filters[i] = meshFilter;
+                    terrainFaceObj = new(gObjName);
+                    terrainFaceObj.transform.parent = transform;
+                    terrainFaceObj.AddComponent<MeshRenderer>().sharedMaterial = new(Shader.Find("Standard"));
                 }
                 
-                _terrainFaces[i] = new(filters[i].sharedMesh, resolution, _faceDirections[i]);
+                MeshFilter meshFilter = terrainFaceObj.GetComponent<MeshFilter>();
+                if (meshFilter == null)
+                {
+                    meshFilter = terrainFaceObj.AddComponent<MeshFilter>();
+                    meshFilter.sharedMesh = new();
+                }
+                
+                filters[i] = meshFilter;
             }
         }
 
@@ -53,18 +71,6 @@ namespace Planet
             {
                 face.ConstructMesh();
             }
-        }
-    
-        // Start is called before the first frame update
-        void Start()
-        {
-        
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
         }
     }
 }
