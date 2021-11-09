@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using TerrainGen;
 using UnityEngine;
@@ -6,6 +7,9 @@ namespace Planet
 {
     public class Planet : MonoBehaviour
     {
+        private readonly System.Random prng = new();
+        private int count;
+
         [Range(2, 256)]
         public int resolution = 10;
         
@@ -65,7 +69,7 @@ namespace Planet
             }
         }
 
-        void GenerateMesh()
+        private void GenerateMesh()
         {
             foreach (TerrainFace face in _terrainFaces)
             {
