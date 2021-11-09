@@ -5,7 +5,7 @@ namespace TerrainGen
 {
     public class TerrainFace
     {
-        public readonly Mesh _mesh;
+        private readonly Mesh _mesh;
         private readonly int _resolution;
         private readonly Vector3 _localUp;
         private readonly Vector3 _axisA;
