@@ -1,48 +1,55 @@
-using System.Linq;
-using TerrainGen;
+using PlanetGen.Settings;
+using PlanetGen.TerrainGen;
 using UnityEngine;
 
-namespace Planet
+namespace PlanetGen
 {
     public class Planet : MonoBehaviour
     {
         [Range(2, 256)]
         public int resolution = 10;
-        
-        private const int Faces = 6; // This will break stuff if you change it... cubes have 6 faces
-        
+        public bool autoUpdate = true;
+        public ColourSettings colourSettings;
+        public ShapeSettings shapeSettings;
+      
         [SerializeField, HideInInspector] 
         private MeshFilter[] filters;
-
         private TerrainFace[] _terrainFaces;
-
         private readonly Vector3[] _faceDirections = { Vector3.up, Vector3.down, Vector3.left, Vector3.right, Vector3.forward, Vector3.back };
 
-        private void OnValidate()
+        private ShapeGenerator _shapeGenerator;
+        
+        private const int Faces = 6; // This will break stuff if you change it... cubes have 6 faces
+
+        public void GenerateNewPlanet()
         {
-            if (filters is null || filters.Any(f => f == null) || _terrainFaces is null || _terrainFaces.Any(t => t is null) )
-            {
-                Initialize();
-            }
-            UpdateMesh();
+            Initialize();
+            GenerateMesh();
+            GenerateColours();
+        }
+
+        public void OnColourSettingsUpdated()
+        {
+            if (!autoUpdate) return;
+            Initialize();
+            GenerateColours();
+        }
+        
+        public void OnShapeSettingsUpdated()
+        {
+            if (!autoUpdate) return;
+            Initialize();
             GenerateMesh();
         }
 
-        private void UpdateMesh()
-        {
-            Debug.Log("Updating planet mesh");
-            for (int i = 0; i < Faces; i++)
-            {
-                _terrainFaces[i] = new(filters[i].sharedMesh, resolution, _faceDirections[i]);
-            }
-        }
         
         private void Initialize()
         {
             Debug.Log("Initialising planet mesh");
             _terrainFaces = new TerrainFace[Faces];
             filters = new MeshFilter[Faces];
-
+            _shapeGenerator = new(shapeSettings);
+            
             for (int i = 0; i < Faces; i++)
             {
                 string gObjName = $"Terrain Face {i}";
@@ -63,13 +70,26 @@ namespace Planet
                 
                 filters[i] = meshFilter;
             }
+
         }
 
         private void GenerateMesh()
         {
+            for (int i = 0; i < Faces; i++)
+            {
+                _terrainFaces[i] = new(_shapeGenerator, filters[i].sharedMesh, resolution, _faceDirections[i]);
+            }
             foreach (TerrainFace face in _terrainFaces)
             {
                 face.ConstructMesh();
+            }
+        }
+
+        private void GenerateColours()
+        {
+            foreach (MeshFilter filter in filters)
+            {
+                filter.GetComponent<MeshRenderer>().sharedMaterial.color = colourSettings.baseColour;
             }
         }
     }

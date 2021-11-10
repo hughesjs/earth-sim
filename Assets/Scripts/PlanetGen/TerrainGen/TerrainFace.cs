@@ -1,18 +1,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TerrainGen
+namespace PlanetGen.TerrainGen
 {
     public class TerrainFace
     {
+        private readonly ShapeGenerator _shapeGenerator;
         private readonly Mesh _mesh;
         private readonly int _resolution;
         private readonly Vector3 _localUp;
         private readonly Vector3 _axisA;
         private readonly Vector3 _axisB;
 
-        public TerrainFace(Mesh mesh, int resolution, Vector3 localUp)
+        public TerrainFace(ShapeGenerator shapeGenerator, Mesh mesh, int resolution, Vector3 localUp)
         {
+            _shapeGenerator = shapeGenerator;
             _mesh = mesh;
             _resolution = resolution;
             _localUp = localUp;
@@ -50,8 +52,8 @@ namespace TerrainGen
                                               ((ratio.y - .5f) * 2 * _axisB);
 
                     Vector3 pointOnUnitSphere = pointOnUnitCube.normalized;
-
-                    vertices.Add(pointOnUnitSphere);
+                    Vector3 pointOnPlanet = _shapeGenerator.CalculatePointOnPlanet(pointOnUnitSphere);
+                    vertices.Add(pointOnPlanet);
                 }
             }
             return vertices;
