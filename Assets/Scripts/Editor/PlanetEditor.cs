@@ -46,18 +46,21 @@ namespace Editor
         {
             if (settings == null) return;
             using EditorGUI.ChangeCheckScope changeCanary = new();
-            var foldout = EditorPrefs.GetBool(editorMap.FoldOutKey, false);
+            bool foldout = EditorPrefs.GetBool(editorMap.FoldOutKey, false);
             foldout = EditorGUILayout.InspectorTitlebar(foldout, settings);
             EditorPrefs.SetBool(editorMap.FoldOutKey, foldout);
-            if (foldout)
+            
+            if (!foldout)
             {
-                CreateCachedEditor(settings, null, ref editorMap.CachedEditor);
+                return;
+            }
+
+            CreateCachedEditor(settings, null, ref editorMap.CachedEditor);
                 
-                editorMap.CachedEditor.OnInspectorGUI();
-                if (changeCanary.changed)
-                {
-                    editorMap.CallBack();
-                }
+            editorMap.CachedEditor.OnInspectorGUI();
+            if (changeCanary.changed)
+            {
+                editorMap.CallBack();
             }
         }
 
