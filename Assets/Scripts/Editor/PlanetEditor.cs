@@ -3,21 +3,16 @@ using System.Collections.Generic;
 using PlanetGen;
 using UnityEditor;
 using UnityEngine;
-using Random = System.Random;
 using UnityObject = UnityEngine.Object; // Because who thought having a class named object was okay?
 namespace Editor
 {
     [CustomEditor(typeof(Planet))]
     public class PlanetEditor : UnityEditor.Editor
     {
-    
-        private Planet _planet;
+        private const string ShapeFoldoutKey = "Planet.ShapeSettings/FoldOut";
+        private const string ColourFoldoutKey = "Planet.ColourSettings/FoldOut";
         
-        [SerializeField]
-        private bool shapeFoldout;
-        [SerializeField]
-        private bool colourFoldout;
-
+        private Planet _planet;
         private Dictionary<ScriptableObject, EditorMap> _editorConfig;
 
         public override void OnInspectorGUI()
@@ -51,8 +46,10 @@ namespace Editor
         {
             if (settings == null) return;
             using EditorGUI.ChangeCheckScope changeCanary = new();
-            editorMap.FoldOut = EditorGUILayout.InspectorTitlebar(editorMap.FoldOut, settings);
-            if (editorMap.FoldOut)
+            var foldout = EditorPrefs.GetBool(editorMap.FoldOutKey, false);
+            foldout = EditorGUILayout.InspectorTitlebar(foldout, settings);
+            EditorPrefs.SetBool(editorMap.FoldOutKey, foldout);
+            if (foldout)
             {
                 CreateCachedEditor(settings, null, ref editorMap.CachedEditor);
                 
@@ -72,7 +69,7 @@ namespace Editor
                                 {
                                     _planet.shapeSettings, new()
                                                            {
-                                                               FoldOut = false,
+                                                               FoldOutKey = ShapeFoldoutKey,
                                                                CallBack = _planet.OnShapeSettingsUpdated,
                                                                CachedEditor = null
                                                            }
@@ -80,7 +77,7 @@ namespace Editor
                                 {
                                     _planet.colourSettings, new()
                                                             {
-                                                                FoldOut = false,
+                                                                FoldOutKey = ColourFoldoutKey,
                                                                 CallBack = _planet.OnColourSettingsUpdated,
                                                                 CachedEditor = null
                                                             }
@@ -91,7 +88,7 @@ namespace Editor
 
         private class EditorMap
         {
-            public bool FoldOut;
+            public string FoldOutKey;
             public Action CallBack;
             public UnityEditor.Editor CachedEditor;
         }

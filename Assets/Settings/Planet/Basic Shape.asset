@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63f2c6c7524cd534eb95927b3eb49a2f, type: 3}
   m_Name: Basic Shape
   m_EditorClassIdentifier: 
-  radius: 0.6941943
+  radius: 0.73
