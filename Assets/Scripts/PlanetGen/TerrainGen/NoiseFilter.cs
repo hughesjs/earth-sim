@@ -1,3 +1,4 @@
+using PlanetGen.Settings;
 using UnityEngine;
 using Vendor.Noise;
 
@@ -5,25 +6,33 @@ namespace PlanetGen.TerrainGen
 {
     public class NoiseFilter
     {
+        private readonly NoiseSettings _noiseSettings;
         private readonly Noise _noise = new();
 
-        private const float Min = 0;
-        private const float Max = 1;
+        private const float DesiredNoiseMin = 0;
+        private const float DesiredNoiseMax = 1;
 
-        private const float RawMax = 1;
-        private const float RawMin = -1;
+        private const float RawNoiseMax = 1;
+        private const float RawNoiseMin = -1;
+
+        public NoiseFilter(NoiseSettings settings)
+        {
+            _noiseSettings = settings;
+        }
 
         public float EvaluateAtPoint(Vector3 point)
         {
-            float noiseVal = _noise.Evaluate(point); // Range of -1 to 1
-            return TranslateToDesiredRange(noiseVal);
+            Vector3 configuredPoint = point * _noiseSettings.roughness + _noiseSettings.centre;
+            float noiseVal = _noise.Evaluate(configuredPoint); // Range of -1 to 1
+            float adjustedNoiseVal = TranslateToDesiredRange(noiseVal);
+            return adjustedNoiseVal * _noiseSettings.strength;
         }
 
-        private float TranslateToDesiredRange(float noiseVal)
+        private static float TranslateToDesiredRange(float noiseVal)
         {
             // Examples will use desired range of 0 to 2
-            float translationAdjust = Min - RawMin; //  0 - (-1) = 1
-            float scaleAdjust = (Max - Min) / (RawMax - RawMin); // (1 - 0) / (1 - (-1))
+            const float translationAdjust = DesiredNoiseMin - RawNoiseMin; //  0 - (-1) = 1
+            const float scaleAdjust = (DesiredNoiseMax - DesiredNoiseMin) / (RawNoiseMax - RawNoiseMin); // (1 - 0) / (1 - (-1))
 
             return scaleAdjust * (noiseVal + translationAdjust);
         }

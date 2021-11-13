@@ -6,6 +6,7 @@ namespace PlanetGen.Settings
     public class ShapeSettings : ScriptableObject
     {
         public float radius;
-        
+        public NoiseSettings noiseSettings;
+
     }
 }

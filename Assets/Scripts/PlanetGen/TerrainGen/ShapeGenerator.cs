@@ -12,7 +12,7 @@ namespace PlanetGen.TerrainGen
         public ShapeGenerator(ShapeSettings settings)
         {
             _settings = settings;
-            _noiseFilter = new();
+            _noiseFilter = new(settings.noiseSettings);
         }
 
         public Vector3 CalculatePointOnPlanet(Vector3 unitSpherePoint)

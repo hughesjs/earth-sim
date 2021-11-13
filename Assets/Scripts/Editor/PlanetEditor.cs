@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using PlanetGen;
+using PlanetGen.Settings;
 using UnityEditor;
 using UnityEngine;
 using UnityObject = UnityEngine.Object; // Because who thought having a class named object was okay?
@@ -28,6 +29,12 @@ namespace Editor
             {
                 _planet.colourSettings.baseColour = UnityEngine.Random.ColorHSV();
                 _planet.shapeSettings.radius = UnityEngine.Random.value + 0.1f * 2f;
+                _planet.shapeSettings.noiseSettings = new()
+                                                      {
+                                                          centre = UnityEngine.Random.insideUnitSphere,
+                                                          roughness = UnityEngine.Random.value * 5,
+                                                          strength = UnityEngine.Random.value * 1.25f
+                                                      };
                 _planet.GenerateNewPlanet();
             }
             
