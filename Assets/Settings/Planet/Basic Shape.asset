@@ -13,11 +13,26 @@ MonoBehaviour:
   m_Name: Basic Shape
   m_EditorClassIdentifier: 
   radius: 2
-  noiseSettings:
-    strength: 0.3
-    baseRoughness: 0.9
-    roughness: 1.8
-    persistence: 0.5
-    minValue: 0.45
-    numLayers: 9
-    centre: {x: 0, y: 0, z: 0}
+  noiseLayers:
+  - description: Continents
+    enabled: 1
+    useFirstLayerAsMask: 0
+    noiseSetting:
+      strength: 0.12
+      baseRoughness: 0.5
+      roughness: 2.34
+      persistence: 0.4
+      minValue: 0.5
+      numLayers: 6
+      centre: {x: 0, y: 0, z: 0}
+  - description: Mountains
+    enabled: 1
+    useFirstLayerAsMask: 1
+    noiseSetting:
+      strength: 1.5
+      baseRoughness: 1
+      roughness: 4
+      persistence: 0.4
+      minValue: 0.5
+      numLayers: 5
+      centre: {x: 0, y: 0, z: 0}
