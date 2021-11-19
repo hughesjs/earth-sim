@@ -12,8 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63f2c6c7524cd534eb95927b3eb49a2f, type: 3}
   m_Name: Basic Shape
   m_EditorClassIdentifier: 
-  radius: 0.5988494
+  radius: 2
   noiseSettings:
-    strength: 1.2429514
-    roughness: 1.0645212
-    centre: {x: 0.34871876, y: -0.47673646, z: -0.46166816}
+    strength: 0.3
+    baseRoughness: 0.9
+    roughness: 1.8
+    persistence: 0.5
+    minValue: 0.45
+    numLayers: 9
+    centre: {x: 0, y: 0, z: 0}

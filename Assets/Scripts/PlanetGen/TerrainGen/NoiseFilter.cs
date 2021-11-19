@@ -1,3 +1,4 @@
+using System;
 using PlanetGen.Settings;
 using UnityEngine;
 using Vendor.Noise;
@@ -22,10 +23,22 @@ namespace PlanetGen.TerrainGen
 
         public float EvaluateAtPoint(Vector3 point)
         {
-            Vector3 configuredPoint = point * _noiseSettings.roughness + _noiseSettings.centre;
-            float noiseVal = _noise.Evaluate(configuredPoint); // Range of -1 to 1
-            float adjustedNoiseVal = TranslateToDesiredRange(noiseVal);
-            return adjustedNoiseVal * _noiseSettings.strength;
+            float amplitude = 1.0f;
+            float noiseVal = 0.0f;
+            float frequency = _noiseSettings.baseRoughness;
+         
+            for (int i = 0; i < _noiseSettings.numLayers; i++)
+            {
+                Vector3 configuredPoint = point * frequency + _noiseSettings.centre;
+                float v = _noise.Evaluate(configuredPoint); // Range of -1 to 1
+                noiseVal += TranslateToDesiredRange(v) * amplitude;
+
+                frequency *= _noiseSettings.roughness;
+                amplitude *= _noiseSettings.persistence;
+            }
+
+            noiseVal = Mathf.Max(_noiseSettings.minValue, noiseVal - _noiseSettings.minValue);
+            return noiseVal * _noiseSettings.strength;
         }
 
         private static float TranslateToDesiredRange(float noiseVal)
